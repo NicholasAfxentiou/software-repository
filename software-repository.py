@@ -166,7 +166,9 @@ if "Cost" in data.columns and "Software Name" in data.columns:
     st.dataframe(data[LICENSE_COLUMNS])
 
     st.header("2. Licenses Expiring Soon")
-    expiring_soon = data[data["Days to Expire"] <= EXPIRING_DAYS_THRESHOLD]
+    # Only show licenses that expire in the future (0–30 days), not already expired or without a date
+    days = data["Days to Expire"]
+    expiring_soon = data[(days >= 0) & (days <= EXPIRING_DAYS_THRESHOLD)]
     if not expiring_soon.empty:
         st.warning(f"The following licenses are expiring soon (<= {EXPIRING_DAYS_THRESHOLD} days):")
         st.dataframe(expiring_soon)
